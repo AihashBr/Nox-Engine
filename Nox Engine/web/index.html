@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nox Engine</title>
+  <link rel="stylesheet" href="app/style/basic.css">
+  <link rel="stylesheet" href="app/style/button.css">
+  <link rel="stylesheet" href="app/style/layout.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.0/ace.js" integrity="sha512-M+TRgEX+3u6BjGFD6K1kQOj1fjHFRvyRgnENH7kBJOylbN6jp6fryXV9v0V8UB+5xAxGty8XqgMuOYL+EjGBFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+  <div class="top-bar">
+    <img style="margin: 3px;" src="app/icon/logo.svg">
+    <button>File</button>
+    <button>Stop</button>
+    <button>Play</button>
+    <button onclick="saveEditorCode()">Save</button>
+    <button>Objects</button>
+  </div>
+  <div id="editor">
+    <div id="left-bar">
+      <div class="folder">
+        <div style="margin-top: 10px;">
+          <div style="display: flex; align-items: center;">
+            <img src="app/icon/object.svg">
+            <button class="btn-folder">Objects</button>
+            <button class="btn-gray" style="width: 25px; height: 25px; margin-left: 5px;" onclick="createFolder('objects')">+</button>
+          </div>
+          <div style="margin-left: 10px; border-left: solid 1px #888888;" id="folders-objects">
+          </div>
+        </div>
+        <div style="margin-top: 10px;">
+          <div style="display: flex; align-items: center;">
+            <img src="app/icon/scene.svg">
+            <button class="btn-folder">Scene</button>
+            <button class="btn-gray" style="width: 25px; height: 25px; margin-left: 5px;" onclick="createFolder('scene')">+</button>
+          </div>
+          <div style="margin-left: 10px; border-left: solid 1px #888888;" id="folders-scene">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="editor-object"></div>
+  </div>
+  <div id="editor-code"></div>
+
+  <script src="/lib/jsm/ace/ace.js"></script>
+  <script type="module" src="app/app.js"></script>
+</body>
+</html>

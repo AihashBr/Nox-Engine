@@ -1,0 +1,59 @@
+.top-bar {
+  display: flex;
+  background-color: #1e1e1e;
+  color: #ddd;
+}
+
+#editor {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: calc(100vh - 26px);
+  position: absolute;
+  left: 0px;
+  top: 26px;
+  background-color: #252526;
+  color: #ddd;
+}
+
+#editor #left-bar {
+  width: 300px;
+  height: 100%;
+  border-top: solid 1px #3c3c3c;
+  border-right: solid 1px #3c3c3c;
+  background-color: #1e1e1e;
+  color: #ccc;
+}
+
+#editor #left-bar .folder {
+  background-color: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 288px;
+  height: calc(50% - 20px);
+  padding: 5px;
+  margin: 5px;
+  border: solid 1px #444444;
+  border-radius: 5px;
+  color: #ccc;
+}
+
+#editor #editor-object {
+  width: calc(100% - 300px);
+  height: 100%;
+  background-color: #252526;
+  color: #ddd;
+}
+
+#editor-code {
+  display: flex;
+  position: fixed;
+  top: 26px;
+  left: 301px;
+  width: calc(100vw - 301px);
+  height: calc(100vh - 26px);
+  background-color: #1e1e1e;
+  border-top: solid 1px #3c3c3c;
+  color: #ddd;
+}

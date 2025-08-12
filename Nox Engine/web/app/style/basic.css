@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+button {
+  border: none;
+  padding: 5px;
+  margin: 0;
+  background-color: #1e1e1e;
+  color: #ddd;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #3c3c3c;
+  cursor: pointer;
+}
+
+input {
+  background-color: #2d2d2d;
+  padding: 6px;
+  border: none;
+  border-radius: 5px;
+  color: #ddd;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h3 {
+  font-weight: 200;
+  font-size: 14px;
+  color: #ddd;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+p {
+  font-weight: 200;
+  font-size: 14px;
+  color: #ddd;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+img {
+  width: 20px;
+}
