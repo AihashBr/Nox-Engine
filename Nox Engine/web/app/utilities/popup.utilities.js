@@ -201,3 +201,119 @@ export class MessageConfirm {
     });
   }
 }
+export class ObjectSelection {
+  constructor({ game }) {
+    this.game = game;
+    this.container = null;
+    this.isOpen = false; // controla se o popup está aberto
+  }
+
+  show() {
+    return new Promise((resolve, reject) => {
+      if (this.isOpen) return; // impede abrir múltiplos popups
+      this.isOpen = true;
+
+      // Container principal
+      this.container = document.createElement("div");
+      Object.assign(this.container.style, {
+        background: "#1e1e1e",
+        width: "350px",
+        maxHeight: "400px",
+        overflowY: "auto",
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        padding: "10px",
+        border: "1px solid #3c3c3c",
+        borderRadius: "5px",
+        textAlign: "start",
+        zIndex: 9999,
+      });
+
+      const objects = this.game["objects"];
+      for (const folderName in objects) {
+        const folderDiv = document.createElement("div");
+        folderDiv.style.marginBottom = "8px";
+
+        const folderLabel = document.createElement("p");
+        folderLabel.textContent = folderName;
+        Object.assign(folderLabel.style, {
+          margin: "5px 0",
+          color: "#29b1ffff",
+          fontWeight: "bold",
+          cursor: "pointer",
+          padding: "6px",
+          borderRadius: "4px",
+          background: "#2a2a2a",
+          marginBottom: "4px",
+        });
+
+        const fileContainer = document.createElement("div");
+        fileContainer.style.display = "none";
+
+        const files = Object.keys(objects[folderName]);
+        for (const fileName of files) {
+          const fileBtn = document.createElement("button");
+          fileBtn.textContent = fileName;
+          Object.assign(fileBtn.style, {
+            display: "block",
+            width: "100%",
+            textAlign: "left",
+            marginBottom: "4px",
+            padding: "6px",
+            borderRadius: "4px",
+            background: "#2a2a2a",
+            color: "#ccc",
+          });
+
+          fileBtn.onclick = () => {
+            this.close();
+            resolve({ folderName, fileName });
+          };
+
+          fileContainer.appendChild(fileBtn);
+        }
+
+        folderLabel.onclick = () => {
+          if (fileContainer.style.display === "none") {
+            fileContainer.style.display = "block";
+          } else {
+            fileContainer.style.display = "none";
+          }
+        };
+
+        folderDiv.appendChild(folderLabel);
+        folderDiv.appendChild(fileContainer);
+        this.container.appendChild(folderDiv);
+      }
+
+      const cancelButton = document.createElement("button");
+      cancelButton.textContent = "Cancel";
+      Object.assign(cancelButton.style, {
+        marginTop: "10px",
+        padding: "8px 16px",
+        borderRadius: "4px",
+        background: "#333",
+        color: "#fff",
+        width: "100%",
+      });
+
+      cancelButton.onclick = () => {
+        this.close();
+        reject();
+      };
+
+      this.container.appendChild(cancelButton);
+      document.body.appendChild(this.container);
+    });
+  }
+
+  close() {
+    if (this.container) {
+      this.container.remove();
+      this.container = null;
+      this.isOpen = false;
+    }
+  }
+}

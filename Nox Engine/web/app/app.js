@@ -1,4 +1,4 @@
-import { Message, MessageInput, MessageConfirm} from './utilities/popup.utilities.js';
+import { Message, MessageInput, MessageConfirm, ObjectSelection} from './utilities/popup.utilities.js';
 import { Engine } from './engine.js';
 import { LayoutList } from './layout/layoutList.js'
 
@@ -50,7 +50,6 @@ window.loadFolders = (rootFolder) => {
     new Message(`${result.message} Error code: ${result.errorCode}`).show();
   });
 }
-loadFolders('objects');
 
 window.createFile = ({ folderName }) => {
   new MessageInput({
@@ -95,6 +94,49 @@ window.loadFiles = ({ folderName }) => {
   });
 };
 
+window.addObject = ({ rootFolder, folderNameScene }) => {
+  new ObjectSelection({ game: engine.getGame() }).show()
+  .then(({ folderName, fileName }) => {
+    engine.file.addObject({
+      folderNameScene: folderNameScene,
+      folderName: folderName,
+      fileName: fileName
+    })
+    .then(() => {
+      loadObjects({rootFolder: rootFolder, folderName: folderNameScene})
+    })
+    .catch(result => {
+      new Message(`${result.message} Error code: ${result.errorCode}`).show();
+    });
+  })
+  .catch(result => {
+    if (!result.status) {
+      new Message(`${result.message} Error code: ${result.errorCode}`).show();
+    }
+  });
+};
+
+window.deleteObject = ({ rootFolder, folderName, fileName }) => {
+  new MessageConfirm({
+    text: `Do you want to delete the object ${fileName}?`
+  }).show().then(() => {
+    engine.file.delete({ rootFolder, folderName, fileName });
+    loadObjects({ rootFolder, folderName });
+  }).catch();
+};
+
+window.loadObjects = ({ rootFolder, folderName }) => {
+  engine.file.get({ rootFolder: rootFolder, folderName: folderName }).then(result => {
+    LayoutList.objects({
+      elementId: `objects-${folderName}`,
+      folderName: folderName,
+      objects: result.files || []
+    });
+  }).catch(result => {
+    new Message(`${result.message} Error code: ${result.errorCode}`).show();
+  });
+};
+
 window.openEditorCode = ({ folderName, fileName }) => {
   engine.file.get({ folderName: folderName, fileName: fileName }).then(result => {
     editor.setValue(result.file.script, 1);
@@ -109,3 +151,6 @@ window.saveEditorCode = () => {
     new Message(`${result.message} Error code: ${result.errorCode}`).show();
   });
 }
+
+loadFolders('objects');
+loadFolders('scene');

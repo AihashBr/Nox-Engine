@@ -54,9 +54,6 @@ class File {
 window.${fileName} = ({scene}) => {
 };
 
-window.${fileName}Update = () => {
-};
-
 window.${fileName}Editor = () => {
 };`
       };
@@ -64,25 +61,25 @@ window.${fileName}Editor = () => {
     });
   }
 
-  delete({ folderName, fileName }) {
-    delete this.game['objects']?.[folderName]?.[fileName];
+  delete({ rootFolder = 'objects', folderName, fileName }) {
+    delete this.game[rootFolder]?.[folderName]?.[fileName];
   }
 
-  get({ folderName, fileName }) {
+  get({ rootFolder = 'objects', folderName, fileName }) {
     return new Promise((resolve, reject) => {
-      if (!this.game['objects'][folderName]) {
+      if (!this.game[rootFolder][folderName]) {
         reject({ status: false, errorCode: 'FIL003', message: 'Folder does not exist.' });
         return;
       }
       if (fileName) {
-        if (!this.game['objects'][folderName][fileName]) {
+        if (!this.game[rootFolder][folderName][fileName]) {
           reject({ status: false, errorCode: 'FIL004', message: 'File does not exist.' });
           return;
         }
-        resolve({ status: true, file: this.game['objects'][folderName][fileName] });
+        resolve({ status: true, file: this.game[rootFolder][folderName][fileName] });
         return;
       }
-      resolve({ status: true, files: Object.keys(this.game['objects'][folderName]) });
+      resolve({ status: true, files: Object.keys(this.game[rootFolder][folderName]) });
     });
   }
 
@@ -92,14 +89,37 @@ window.${fileName}Editor = () => {
         reject({ status: false, errorCode: 'FIL005', message: 'Folder does not exist.' });
         return;
       }
-
       if (!fileName) {
         reject({ status: false, errorCode: 'FIL006', message: 'File name is required.' });
         return;
       }
-
       this.game['objects'][folderName][fileName].script = value;
       resolve({ status: true, message: 'File saved successfully.' });
+    });
+  }
+
+  addObject({ folderNameScene, folderName, fileName }) {
+    return new Promise((resolve, reject) => {
+      if (!this.game['objects'][folderName]) {
+        reject({ status: false, errorCode: 'FIL007', message: 'Folder does not exist.' });
+        return;
+      }
+      if (!this.game['objects'][folderName][fileName]) {
+        reject({ status: false, errorCode: 'FIL008', message: 'File already exists.' });
+        return;
+      }
+      if (!this.game['scene'][folderNameScene]) {
+        reject({ status: false, errorCode: 'FIL009', message: 'Folder does not exist.' });
+        return;
+      }
+      this.game['scene'][folderNameScene][fileName+this.game.id++] = {
+        object: {
+          folderName: folderName,
+          fileName: fileName
+        },
+        parameters: {}
+      }
+      resolve({ status: true });
     });
   }
 }
@@ -107,13 +127,18 @@ window.${fileName}Editor = () => {
 export class Engine {
   constructor() {
     this.game = {
+      files: {},
       objects: {
         global: {}
       },
-      scene: {}
+      scene: {},
+      id: 1
     };
-
     this.folder = new Folder(this.game);
     this.file = new File(this.game);
+  }
+
+  getGame() {
+    return this.game;
   }
 }
